@@ -16,9 +16,9 @@ module Metaog
       html = open(url, 'User-Agent' => "metaog-bot/1.0.0") do |f|
         f.read
       end
-      @doc = Nokogiri::HTML.parse(html, nil, 'utf-8')
+      doc = Nokogiri::HTML.parse(html, nil, 'utf-8')
 
-      @doc.xpath('//head/meta').each do |node|
+      doc.xpath('//head/meta').each do |node|
         property = node.attr('property')
 
         # title
