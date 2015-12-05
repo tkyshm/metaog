@@ -1,3 +1,4 @@
+# coding: utf-8
 require "metaog/version"
 require 'open-uri'
 require 'nokogiri'
@@ -12,12 +13,10 @@ module Metaog
     attr_accessor :title, :url, :type, :image, :site_name, :description
 
     def initialize url
-      charset = nil
-      html = open(url) do |f|
-        charset = f.charset
+      html = open(url, 'User-Agent' => "metaog-bot/1.0.0") do |f|
         f.read
       end
-      @doc = Nokogiri::HTML.parse(html, nil, charset)
+      @doc = Nokogiri::HTML.parse(html, nil, 'utf-8')
 
       @doc.xpath('//head/meta').each do |node|
         property = node.attr('property')
