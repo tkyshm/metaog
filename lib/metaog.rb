@@ -2,6 +2,7 @@
 require "metaog/version"
 require 'open-uri'
 require 'nokogiri'
+require 'kconv'
 
 module Metaog
   # Your code goes here...
@@ -13,10 +14,10 @@ module Metaog
     attr_accessor :title, :url, :type, :image, :site_name, :description
 
     def initialize url
-      html = open(url, 'User-Agent' => "metaog-bot/1.0.0") do |f|
+      html = open(url, "r:binary", 'User-Agent' => "metaog-bot/1.0.0") do |f|
         f.read
       end
-      doc = Nokogiri::HTML.parse(html, nil, 'utf-8')
+      doc = Nokogiri::HTML.parse(html.toutf8, nil, 'utf-8')
 
       doc.xpath('//head/meta').each do |node|
         property = node.attr('property')
