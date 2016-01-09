@@ -11,9 +11,11 @@ module Metaog
   end
 
   class Core
-    attr_accessor :title, :url, :type, :image, :site_name, :description
+    attr_accessor :properties
 
     def initialize url
+      @properties = {} if @properties.nil?
+
       html = open(url, "r:binary", 'User-Agent' => "metaog-bot/1.0.0") do |f|
         f.read
       end
@@ -22,38 +24,13 @@ module Metaog
       doc.xpath('//head/meta').each do |node|
         property = node.attr('property')
 
-        # title
-        if property == "og:title"
-          @title = node.attr('content')
-        end
-
-        # url
-        if property == "og:url"
-          @url = node.attr('content')
-        end
-
-        # type
-        if property == "og:type"
-          @type = node.attr('content')
-        end
-
-        # image
-        if property == "og:image"
-          @image = node.attr('content')
-        end
-
-        # site_name
-        if property == "og:site_name"
-          @site_name = node.attr('content')
-        end
-
-        # description
-        if property == "og:description"
-          @description = node.attr('content')
+        if property =~ /^og:(.*)$/
+          @properties[:"#{$1}"] = node.attr('content')
         end
 
       end
     end
 
   end
+
 end
